@@ -1,0 +1,27 @@
+# Create a replicaSet instead of a single pod in order to verify the routing of ingress controller
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: python-web-app-rs
+  labels:
+    app: python-hello
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: python-hello
+  template:
+    metadata:
+      labels:
+        app: python-hello
+    spec:
+      containers:
+      - name: python-hello-app-container
+        image: python-hello-app:latest
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 5000
